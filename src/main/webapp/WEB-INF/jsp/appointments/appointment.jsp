@@ -69,6 +69,7 @@
 	    <table id="vets" class="table table-striped">
 	        <thead>
 	        <tr>
+	        	<th></th>
 	            <th>9 am</th>
 	            <th>10 am</th>
 	            <th>11 am</th>
@@ -80,16 +81,10 @@
 	        </tr>
 	        </thead>
 	        <tbody>
-	        <c:forEach items="${vets.vetList}" var="vet">
+	        <c:forEach items="${dates}" var="date">
 	            <tr>
 	                <td>
-	                    <c:out value="${vet.firstName} ${vet.lastName}"/>
-	                </td>
-	                <td>
-	                    <c:forEach var="specialty" items="${vet.specialties}">
-	                        <c:out value="${specialty.name} "/>
-	                    </c:forEach>
-	                    <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
+	                    <c:out value="${date}"/>
 	                </td>
 	            </tr>
 	        </c:forEach>

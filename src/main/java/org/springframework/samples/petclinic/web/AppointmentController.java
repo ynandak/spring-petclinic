@@ -24,19 +24,22 @@ import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.ClinicService;
+import org.springframework.samples.petclinic.service.DateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AppointmentController {
 
     private final ClinicService clinicService;
+    private final DateService dateService;
+
 
     @Autowired
-    public AppointmentController(ClinicService clinicService) {
+    public AppointmentController(ClinicService clinicService, DateService dateService) {
         this.clinicService = clinicService;
+        this.dateService = dateService;
     }
 
     @RequestMapping(value = { "/appointment.html"})
@@ -59,8 +62,10 @@ public class AppointmentController {
         }
         if(vetID!=null) {
         	model.put("vetID", vetID);
+        	
+        	List<String> dates = this.dateService.nextTwoWorkWeeks();
+        	model.put("dates", dates);
         }
-        
         model.put("pets", pets);
         
         return "appointments/appointment";
