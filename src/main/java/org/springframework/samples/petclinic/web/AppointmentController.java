@@ -18,9 +18,11 @@ package org.springframework.samples.petclinic.web;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Vets;
+import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -63,7 +65,7 @@ public class AppointmentController {
         if(vetID!=null) {
         	model.put("vetID", vetID);
         	
-        	List<String> dates = this.dateService.nextTwoWorkWeeks();
+        	Map<String, Set<AppointmentTime>> dates = this.dateService.datesWithAppointmentsForVet(Integer.parseInt(vetID));
         	model.put("dates", dates);
         }
         model.put("pets", pets);

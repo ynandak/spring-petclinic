@@ -84,7 +84,7 @@
 	        <c:forEach items="${dates}" var="date">
 	            <tr>
 	                <td>
-	                    <c:out value="${date}"/>
+	                    <c:out value="${date.key}"/>
 	                </td>
 	            </tr>
 	        </c:forEach>

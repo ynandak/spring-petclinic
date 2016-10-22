@@ -33,7 +33,7 @@ import java.util.Date;
 @Table(name = "appointments")
 public class Appointment extends BaseEntity {
 
-    @Column(name = "visit_date")
+    @Column(name = "appointment_date")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private Date date;
 

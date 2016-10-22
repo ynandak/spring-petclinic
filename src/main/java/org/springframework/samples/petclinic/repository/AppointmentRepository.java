@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.springframework.samples.petclinic.model.AppointmentTime;
+import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Appointment;
 
-public interface DateService {
+public interface AppointmentRepository {
 
-	List<Date> nextTwoWorkWeeks();
+    void save(Appointment appointment) throws DataAccessException;
 
-	Map<String, Set<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId);
+    List<Appointment> findByVetForDates(Integer vetId, List<Date> dates) throws DataAccessException;
+
 }
