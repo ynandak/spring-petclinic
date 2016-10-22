@@ -51,22 +51,3 @@ INSERT IGNORE INTO visits VALUES (1, 7, '2010-03-04', 'rabies shot');
 INSERT IGNORE INTO visits VALUES (2, 8, '2011-03-04', 'rabies shot');
 INSERT IGNORE INTO visits VALUES (3, 8, '2009-06-04', 'neutered');
 INSERT IGNORE INTO visits VALUES (4, 7, '2008-09-04', 'spayed');
-
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('09:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('10:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('11:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('12:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('13:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('14:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('15:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('16:00:00');
-
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('09:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('10:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('11:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('12:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('13:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('14:00:00');
-INSERT IGNORE INTO appointment_times (appointment_time) VALUES ('15:00:00');
-
-INSERT IGNORE INTO appointments VALUES (1, '2016-10-24', 2, 1, 1);

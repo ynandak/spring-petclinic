@@ -110,5 +110,11 @@ public class ClinicServiceImpl implements ClinicService {
 		return visitRepository.findByPetId(petId);
 	}
 
+	//Added by Yogesh:
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Owner> findAllOwners() throws DataAccessException {
+        return ownerRepository.findAll();
+    }
 
 }

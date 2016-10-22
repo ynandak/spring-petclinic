@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.support.OpenSessionInViewFilter;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -77,5 +78,12 @@ public class JpaOwnerRepositoryImpl implements OwnerRepository {
         }
 
     }
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<Owner> findAll() throws DataAccessException {
+        Query query = this.em.createQuery("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets");
+        return query.getResultList();
+	}
 
 }
