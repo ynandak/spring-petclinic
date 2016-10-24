@@ -20,11 +20,14 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Appointment;
+import org.springframework.samples.petclinic.model.AppointmentTime;
 
 public interface AppointmentRepository {
 
     void save(Appointment appointment) throws DataAccessException;
 
     List<Appointment> findByVetForDates(Integer vetId, List<Date> dates) throws DataAccessException;
+
+	AppointmentTime findAppointmentTimeById(int timeID);
 
 }

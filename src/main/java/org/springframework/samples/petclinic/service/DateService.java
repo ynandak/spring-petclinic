@@ -18,13 +18,11 @@ package org.springframework.samples.petclinic.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.springframework.samples.petclinic.model.AppointmentTime;
 
 public interface DateService {
 
 	List<Date> nextTwoWorkWeeks();
 
-	Map<String, Set<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId);
+	Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId);
 }

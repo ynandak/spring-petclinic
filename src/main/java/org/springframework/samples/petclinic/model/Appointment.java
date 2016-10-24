@@ -43,7 +43,7 @@ public class Appointment extends BaseEntity {
     
     @ManyToOne
     @JoinColumn(name = "vet_id")
-    private Pet vet;
+    private Vet vet;
     
     @ManyToOne
     @JoinColumn(name = "appointment_time_id")
@@ -65,11 +65,11 @@ public class Appointment extends BaseEntity {
 		this.pet = pet;
 	}
 
-	public Pet getVet() {
+	public Vet getVet() {
 		return vet;
 	}
 
-	public void setVet(Pet vet) {
+	public void setVet(Vet vet) {
 		this.vet = vet;
 	}
 

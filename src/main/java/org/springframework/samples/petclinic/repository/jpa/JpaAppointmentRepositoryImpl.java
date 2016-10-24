@@ -21,9 +21,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Appointment;
+import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.repository.AppointmentRepository;
 import org.springframework.stereotype.Repository;
 
@@ -46,10 +48,20 @@ public class JpaAppointmentRepositoryImpl implements AppointmentRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Appointment> findByVetForDates(Integer vetId, List<Date> dates) throws DataAccessException {
-        Query query = this.em.createQuery("SELECT a FROM Appointment a where a.vet.id= :vetId AND a.date IN :dates");
-        query.setParameter("vetId", vetId);
-        query.setParameter("dates", dates);
-        return query.getResultList();
+		Query query = this.em.createQuery("SELECT a FROM Appointment a WHERE a.vet.id= :vetId AND a.date BETWEEN :startDate AND :endDate");
+
+		Date startDate = dates.get(0);
+		Date endDate = dates.get(dates.size()-1);
+
+		query.setParameter("vetId", vetId);
+		query.setParameter("startDate", startDate, TemporalType.DATE);
+		query.setParameter("endDate", endDate, TemporalType.DATE);
+		return query.getResultList();
+	}
+
+	@Override
+	public AppointmentTime findAppointmentTimeById(int id) {
+		return this.em.find(AppointmentTime.class, id);
 	}
 
 }

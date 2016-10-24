@@ -16,15 +16,19 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Appointment;
+import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.repository.AppointmentRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
@@ -45,13 +49,15 @@ public class ClinicServiceImpl implements ClinicService {
     private VetRepository vetRepository;
     private OwnerRepository ownerRepository;
     private VisitRepository visitRepository;
+    private AppointmentRepository appointmentRepository;
 
     @Autowired
-    public ClinicServiceImpl(PetRepository petRepository, VetRepository vetRepository, OwnerRepository ownerRepository, VisitRepository visitRepository) {
+    public ClinicServiceImpl(PetRepository petRepository, VetRepository vetRepository, OwnerRepository ownerRepository, VisitRepository visitRepository, AppointmentRepository appointmentRepository) {
         this.petRepository = petRepository;
         this.vetRepository = vetRepository;
         this.ownerRepository = ownerRepository;
         this.visitRepository = visitRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Override
@@ -116,5 +122,31 @@ public class ClinicServiceImpl implements ClinicService {
     public Collection<Owner> findAllOwners() throws DataAccessException {
         return ownerRepository.findAll();
     }
+
+    @Transactional
+	@Override
+	public void addAppointment(int vetID, int petID, Date date, int timeID) {
+		Pet pet = findPetById(petID);
+		Vet vet = findVetById(vetID);
+		AppointmentTime time = findAppointmentTimeById(timeID);
+		Appointment app = new Appointment();
+		app.setPet(pet);
+		app.setVet(vet);
+		app.setTime(time);
+		app.setDate(date);
+		appointmentRepository.save(app);
+	}
+
+    @Override
+    @Transactional(readOnly = true)
+	public Vet findVetById(int vetID) {
+		return vetRepository.findVetById(vetID);
+	}
+	
+    @Override
+    @Transactional(readOnly = true)
+	public AppointmentTime findAppointmentTimeById(int timeID) {
+		return appointmentRepository.findAppointmentTimeById(timeID);
+	}
 
 }

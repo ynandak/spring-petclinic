@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -28,13 +27,13 @@ public class AppointmentTime extends BaseEntity{
     
     @Column(name = "appointment_time")
     @NotEmpty
-    private Time time;
+    private String time;
 
-	public Time getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Time time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

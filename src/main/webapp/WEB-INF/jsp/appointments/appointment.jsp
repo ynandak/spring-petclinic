@@ -86,6 +86,14 @@
 	                <td>
 	                    <c:out value="${date.key}"/>
 	                </td>
+	                <c:forEach items="${date.value}" var="time">
+		                <td>
+<%-- 		                    <c:out value="${time.time}"/> --%>
+								<c:if test="${time != null}">
+									<button type="submit" form="pageForm" name="appointmentTime" value="${date.key}_${time.id}">Book</button>
+								</c:if>
+		                </td>
+	                </c:forEach>
 	            </tr>
 	        </c:forEach>
 	        </tbody>

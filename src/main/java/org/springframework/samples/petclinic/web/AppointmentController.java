@@ -15,11 +15,11 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.model.AppointmentTime;
@@ -45,9 +45,15 @@ public class AppointmentController {
     }
 
     @RequestMapping(value = { "/appointment.html"})
-    public String showAppointments(@RequestParam(required=false) String ownerID, @RequestParam(required=false) String petID, @RequestParam(required=false) String vetID, Map<String, Object> model) {
+    public String showAppointments(@RequestParam(required=false) String ownerID, @RequestParam(required=false) String petID, @RequestParam(required=false) String vetID, @RequestParam(required=false) String appointmentTime, Map<String, Object> model) throws NumberFormatException, ParseException {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet objects
         // so it is simpler for Object-Xml mapping
+    	if(appointmentTime!=null && petID!=null && vetID!=null) {
+    		String[] time = appointmentTime.split("_");
+    		String date = time[0];
+    		int timeID = Integer.parseInt(time[1]);
+    		this.clinicService.addAppointment(Integer.parseInt(vetID), Integer.parseInt(petID), new SimpleDateFormat("yyyy-MM-dd").parse(date), timeID);
+    	}
         Vets vets = new Vets();
         vets.getVetList().addAll(this.clinicService.findVets());
         model.put("vets", vets);
@@ -65,7 +71,7 @@ public class AppointmentController {
         if(vetID!=null) {
         	model.put("vetID", vetID);
         	
-        	Map<String, Set<AppointmentTime>> dates = this.dateService.datesWithAppointmentsForVet(Integer.parseInt(vetID));
+        	Map<String, List<AppointmentTime>> dates = this.dateService.datesWithAppointmentsForVet(Integer.parseInt(vetID));
         	model.put("dates", dates);
         }
         model.put("pets", pets);

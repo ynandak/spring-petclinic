@@ -19,12 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Appointment;
 import org.springframework.samples.petclinic.model.AppointmentTime;
@@ -58,25 +55,37 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
-	public Map<String, Set<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId) {
+	public Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId) {
 		List<Date> days = nextTwoWorkWeeks();
-		Map<String, Set<AppointmentTime>> dates = new LinkedHashMap<String, Set<AppointmentTime>>();
+		Map<String, List<AppointmentTime>> dates = new LinkedHashMap<String, List<AppointmentTime>>();
 		List<Appointment> apps = appointmentRepository.findByVetForDates(vetId, days);
 		
-		for(Date day : days) {
-			dates.put(new SimpleDateFormat("yyyy-MM-dd").format(day), null);
-		}
+		List<AppointmentTime> validTimes = new ArrayList<AppointmentTime>();
+		AppointmentTime time;
+		time = new AppointmentTime(); time.setTime("09:00:00"); time.setId(1); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("10:00:00"); time.setId(2); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("11:00:00"); time.setId(3); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("12:00:00"); time.setId(4); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("13:00:00"); time.setId(5); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("14:00:00"); time.setId(6); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("15:00:00"); time.setId(7); validTimes.add(time);
+		time = new AppointmentTime(); time.setTime("16:00:00"); time.setId(8); validTimes.add(time);
 		
+		for(Date day : days) {
+			dates.put(new SimpleDateFormat("yyyy-MM-dd").format(day), new ArrayList<AppointmentTime>(validTimes));
+		}
+		System.err.println("apps size is " + apps.size());
 		for(Appointment app : apps) {
 			String appDate = new SimpleDateFormat("yyyy-MM-dd").format(app.getDate());
-			Set<AppointmentTime> temp = dates.get(appDate);
-			if(temp == null) {
-				temp = new HashSet<AppointmentTime>();
+			List<AppointmentTime> temp = dates.get(appDate);
+			for(int i=0; i<temp.size(); i++) {
+				if(temp.get(i)!=null && app.getTime().getTime().equals(temp.get(i).getTime())) {
+					temp.set(i, null);
+					System.err.println("inside");
+				}
 			}
-			temp.add(app.getTime());
-			dates.put(appDate, temp);
 		}
-		
+		System.err.println("done");
 		return dates;
 	}
 }

@@ -16,8 +16,10 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
@@ -51,5 +53,11 @@ public interface ClinicService {
     Collection<Owner> findAllOwners() throws DataAccessException;
 
 	Collection<Visit> findVisitsByPetId(int petId);
+
+	void addAppointment(int vetID, int petID, Date date, int timeID);
+	
+	AppointmentTime findAppointmentTimeById(int id);
+	
+	Vet findVetById(int vetID);
 
 }

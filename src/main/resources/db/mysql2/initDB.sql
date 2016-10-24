@@ -78,5 +78,5 @@ CREATE TABLE IF NOT EXISTS appointments (
   FOREIGN KEY (appointment_time_id) REFERENCES appointment_times(id),
   FOREIGN KEY (pet_id) REFERENCES pets(id),
   FOREIGN KEY (vet_id) REFERENCES vets(id),
-  UNIQUE KEY `appointment_date_time` (`appointment_date`,`appointment_time_id`)
+  UNIQUE KEY `appointment_date_time` (`appointment_date`,`appointment_time_id`,`vet_id`)
 ) engine=InnoDB;
