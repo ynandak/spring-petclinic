@@ -35,7 +35,6 @@ public class JpaAppointmentRepositoryImpl implements AppointmentRepository {
     @PersistenceContext
     private EntityManager em;
 
-
     @Override
     public void save(Appointment appointment) {
         if (appointment.getId() == null) {
@@ -62,6 +61,19 @@ public class JpaAppointmentRepositoryImpl implements AppointmentRepository {
 	@Override
 	public AppointmentTime findAppointmentTimeById(int id) {
 		return this.em.find(AppointmentTime.class, id);
+	}
+
+	@Override
+	public void delete(Appointment app) {
+		this.em.remove(app);
+	}
+
+	@Override
+	public Appointment findAppointmentByDateTime(Date date, AppointmentTime time) {
+		Query query = this.em.createQuery("SELECT a FROM Appointment a WHERE a.date= :date AND a.time= :time");
+		query.setParameter("date", date, TemporalType.DATE);
+		query.setParameter("time", time);
+		return (Appointment) query.getSingleResult();
 	}
 
 }

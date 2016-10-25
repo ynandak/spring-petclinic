@@ -22,7 +22,7 @@
         <tbody>
             <tr>
                 <td>
-                	<select name="ownerID" form="pageForm" onchange='if(this.value != -1) { this.form.submit(); }'>
+                	<select id="owners" form="pageForm" name="ownerID" onchange='if(this.value != -1) { this.form.submit(); }'>
                 		<option value="-1" selected disabled>Select Owner</option>
 	                    <c:forEach items="${owners}" var="owner">
 	                    	<option 
@@ -35,7 +35,7 @@
 	                </select>
                 </td>
                 <td>
-                	<select name="petID" form="pageForm">
+                	<select id="pets" form="pageForm" name="petID">
                 		<option selected disabled>Select Pet</option>
 	                    <c:forEach items="${pets}" var="pet">
 	                    	<option 
@@ -64,11 +64,11 @@
         </tbody>
     </table>
     
-	<c:if test="${vetID != null}">
+	<c:if test="${vetID != null && ownerID != null}">
 		<h2>Select appointment time</h2>
-	    <table id="vets" class="table table-striped">
+	    <table border="1" id="vets" class="table table-striped">
 	        <thead>
-	        <tr>
+	        <tr align="center">
 	        	<th></th>
 	            <th>9 am</th>
 	            <th>10 am</th>
@@ -82,21 +82,32 @@
 	        </thead>
 	        <tbody>
 	        <c:forEach items="${dates}" var="date">
-	            <tr>
+	            <tr align="center">
 	                <td>
 	                    <c:out value="${date.key}"/>
 	                </td>
 	                <c:forEach items="${date.value}" var="time">
-		                <td>
-<%-- 		                    <c:out value="${time.time}"/> --%>
-								<c:if test="${time != null}">
-									<button type="submit" form="pageForm" name="appointmentTime" value="${date.key}_${time.id}">Book</button>
-								</c:if>
-		                </td>
+<%-- 		            <c:out value="${time.time}"/> --%>
+						<c:if test="${time != null && time.time!='owner'}">
+							<td bgcolor="SpringGreen">
+								<button type="submit" form="pageForm" name="appointmentTime" value="${date.key}_${time.id}_create">Book</button>
+							</td>
+						</c:if>
+						<c:if test="${time != null && time.time=='owner'}">
+							<td bgcolor="DeepSkyBlue">	
+								<button type="submit" form="pageForm" name="appointmentTime" value="${date.key}_${time.id}_delete">Cancel</button>
+							</td>
+						</c:if>
+						<c:if test="${time == null}">
+							<td bgcolor="Tomato">	
+								<c:out value="N/A"/>
+							</td>
+						</c:if>
 	                </c:forEach>
 	            </tr>
 	        </c:forEach>
 	        </tbody>
 	    </table>
 	</c:if>
+	
 </petclinic:layout>

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.model.Owner;
@@ -30,6 +31,7 @@ import org.springframework.samples.petclinic.service.DateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AppointmentController {
@@ -52,7 +54,13 @@ public class AppointmentController {
     		String[] time = appointmentTime.split("_");
     		String date = time[0];
     		int timeID = Integer.parseInt(time[1]);
-    		this.clinicService.addAppointment(Integer.parseInt(vetID), Integer.parseInt(petID), new SimpleDateFormat("yyyy-MM-dd").parse(date), timeID);
+    		String action = time[2];
+    		if(action.equals("create")) {
+    			this.clinicService.addAppointment(Integer.parseInt(vetID), Integer.parseInt(petID), new SimpleDateFormat("yyyy-MM-dd").parse(date), timeID);
+    		}
+    		else if (action.equals("delete")) {
+    			this.clinicService.deleteAppointment(new SimpleDateFormat("yyyy-MM-dd").parse(date), timeID);
+    		}
     	}
         Vets vets = new Vets();
         vets.getVetList().addAll(this.clinicService.findVets());
@@ -70,13 +78,30 @@ public class AppointmentController {
         }
         if(vetID!=null) {
         	model.put("vetID", vetID);
-        	
-        	Map<String, List<AppointmentTime>> dates = this.dateService.datesWithAppointmentsForVet(Integer.parseInt(vetID));
+        }
+        if(vetID!=null && ownerID!=null) {
+        	Map<String, List<AppointmentTime>> dates = this.dateService.datesWithAppointmentsForVet(Integer.parseInt(vetID), Integer.parseInt(ownerID));
         	model.put("dates", dates);
+            for(Map.Entry<String, List<AppointmentTime>> entry : dates.entrySet()) {
+            	String d = entry.getKey();
+            	List<AppointmentTime> l = entry.getValue();
+            	System.err.print(d + " - ");
+            	for(AppointmentTime t : l) {
+            		if(t==null) System.err.print("null ");
+            		else System.err.print(t.getId() + "|" + t.getTime() + " ");
+            	}
+            	System.err.println();
+            }
         }
         model.put("pets", pets);
         
         return "appointments/appointment";
     }
 
+    @RequestMapping(value={"/appointment/pets"}, produces=MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Pet> getPets(@RequestParam(required=true) String ownerID) {
+        
+        return this.clinicService.findOwnerById(Integer.parseInt(ownerID)).getPets();
+    }
 }

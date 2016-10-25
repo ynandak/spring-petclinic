@@ -149,4 +149,17 @@ public class ClinicServiceImpl implements ClinicService {
 		return appointmentRepository.findAppointmentTimeById(timeID);
 	}
 
+	@Override
+	@Transactional
+	public void deleteAppointment(Date date, int timeID) {
+		Appointment app = findAppointmentByDateTime(date, timeID);
+		appointmentRepository.delete(app);		
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Appointment findAppointmentByDateTime(Date date, int timeID) {
+		return appointmentRepository.findAppointmentByDateTime(date, findAppointmentTimeById(timeID));
+	}
+
 }

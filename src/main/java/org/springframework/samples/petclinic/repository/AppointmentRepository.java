@@ -30,4 +30,8 @@ public interface AppointmentRepository {
 
 	AppointmentTime findAppointmentTimeById(int timeID);
 
+	void delete(Appointment app);
+
+	Appointment findAppointmentByDateTime(Date date, AppointmentTime time);
+
 }

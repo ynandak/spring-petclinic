@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Appointment;
 import org.springframework.samples.petclinic.model.AppointmentTime;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -59,5 +60,9 @@ public interface ClinicService {
 	AppointmentTime findAppointmentTimeById(int id);
 	
 	Vet findVetById(int vetID);
+
+	void deleteAppointment(Date date, int timeID);
+
+	Appointment findAppointmentByDateTime(Date date, int timeID);
 
 }

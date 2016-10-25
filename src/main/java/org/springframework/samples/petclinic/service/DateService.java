@@ -24,5 +24,5 @@ public interface DateService {
 
 	List<Date> nextTwoWorkWeeks();
 
-	Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId);
+	Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId, Integer ownerID);
 }

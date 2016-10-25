@@ -11,6 +11,9 @@
 <spring:url value="/vendors/jquery-ui/ui/jquery.ui.datepicker.js" var="jQueryUiDatePicker"/>
 <script src="${jQueryUiDatePicker}"></script>
 
+<spring:url value="/vendors/jquery/appointments.js" var="appts"/>
+<script src="${appts}"></script>
+
 
 <%-- Bootstrap --%>
 <spring:url value="/vendors/bootstrap/dist/js/bootstrap.min.js" var="bootstrapJs"/>

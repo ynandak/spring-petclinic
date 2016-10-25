@@ -19,12 +19,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Appointment;
 import org.springframework.samples.petclinic.model.AppointmentTime;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +37,18 @@ import org.springframework.stereotype.Service;
 public class DateServiceImpl implements DateService {
 	
 	private AppointmentRepository appointmentRepository;
+	private ClinicService clinicService;
 	
 	@Autowired
-	public DateServiceImpl(AppointmentRepository appointmentRepository) {
+	public DateServiceImpl(AppointmentRepository appointmentRepository, ClinicService clinicService) {
 		this.appointmentRepository = appointmentRepository;
+		this.clinicService = clinicService;
 	}
 
 	@Override
 	public List<Date> nextTwoWorkWeeks() {
 	    Calendar calendar = Calendar.getInstance();
+	    calendar.add(Calendar.DAY_OF_MONTH, 1);
 		List<Date> dates = new ArrayList<Date>();
 		
 		for(int i=0; i<14; i++) {
@@ -55,37 +63,50 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
-	public Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId) {
+	public Map<String, List<AppointmentTime>> datesWithAppointmentsForVet(Integer vetId, Integer ownerID) {
+		Owner owner = clinicService.findOwnerById(ownerID);
+		List<Pet> pets = owner.getPets();
+		Set<Integer> petIDs = new HashSet<Integer>();
+		for(Pet p : pets) {
+			petIDs.add(p.getId());
+		}
 		List<Date> days = nextTwoWorkWeeks();
 		Map<String, List<AppointmentTime>> dates = new LinkedHashMap<String, List<AppointmentTime>>();
 		List<Appointment> apps = appointmentRepository.findByVetForDates(vetId, days);
 		
 		List<AppointmentTime> validTimes = new ArrayList<AppointmentTime>();
 		AppointmentTime time;
-		time = new AppointmentTime(); time.setTime("09:00:00"); time.setId(1); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("10:00:00"); time.setId(2); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("11:00:00"); time.setId(3); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("12:00:00"); time.setId(4); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("13:00:00"); time.setId(5); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("14:00:00"); time.setId(6); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("15:00:00"); time.setId(7); validTimes.add(time);
-		time = new AppointmentTime(); time.setTime("16:00:00"); time.setId(8); validTimes.add(time);
+		for(int i=1; i<=8; i++) {
+			time = new AppointmentTime();
+			if(i==1)
+				time.setTime("0" + (i+8) +":00:00");
+			else
+				time.setTime((i+8) +":00:00");
+			time.setId(i);
+			validTimes.add(time);
+		}
 		
 		for(Date day : days) {
 			dates.put(new SimpleDateFormat("yyyy-MM-dd").format(day), new ArrayList<AppointmentTime>(validTimes));
 		}
-		System.err.println("apps size is " + apps.size());
 		for(Appointment app : apps) {
 			String appDate = new SimpleDateFormat("yyyy-MM-dd").format(app.getDate());
 			List<AppointmentTime> temp = dates.get(appDate);
 			for(int i=0; i<temp.size(); i++) {
 				if(temp.get(i)!=null && app.getTime().getTime().equals(temp.get(i).getTime())) {
-					temp.set(i, null);
-					System.err.println("inside");
+					if(petIDs.contains(app.getPet().getId())) {
+						AppointmentTime t = new AppointmentTime();
+						t.setId(temp.get(i).getId());
+						t.setTime("owner");
+						temp.set(i, t);
+						System.err.println("inside");
+					}
+					else {
+						temp.set(i, null);
+					}
 				}
 			}
 		}
-		System.err.println("done");
 		return dates;
 	}
 }
